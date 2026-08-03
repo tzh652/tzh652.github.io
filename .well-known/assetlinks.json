@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.example.foodieheal",
+      "sha256_cert_fingerprints": [
+        "39:67:81:5E:7B:3B:E7:0C:CE:14:99:F8:2A:C5:5E:06:B3:5F:C1:AA:38:86:23:33:45:27:DB:87:28:F6:1E:5D"
+      ]
+    }
+  }
+]
