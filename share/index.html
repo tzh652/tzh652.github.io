@@ -62,17 +62,29 @@
         <a id="open-btn" href="#" class="btn">Open in App</a>
     </div>
 
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const sourceStart = urlParams.get('sourceStart');
+   <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const sourceStart = urlParams.get('sourceStart');
 
-        // Scheme fallback for manual tap
-        const appSchemeUrl = sourceStart 
-            ? "foodieheal://share?sourceStart=" + encodeURIComponent(sourceStart)
-            : "foodieheal://share";
+    // 1. Target HTTPS App Link path first
+    const httpsUrl = sourceStart 
+        ? "https://tzh652.github.io/share?sourceStart=" + encodeURIComponent(sourceStart)
+        : "https://tzh652.github.io/share";
 
-        // Set button destination to custom scheme
-        document.getElementById('open-btn').href = appSchemeUrl;
-    </script>
+    // 2. Android Intent Scheme fallback (Chrome-friendly)
+    const androidIntentUrl = sourceStart
+        ? `intent://share?sourceStart=${encodeURIComponent(sourceStart)}#Intent;scheme=foodieheal;package=com.example.foodieheal;end`
+        : `intent://share#Intent;scheme=foodieheal;package=com.example.foodieheal;end`;
+
+    const openBtn = document.getElementById('open-btn');
+
+    // Set fallback href on button
+    openBtn.href = androidIntentUrl;
+
+    // Optional: Auto-trigger redirection when landing on page
+    window.onload = function() {
+        window.location.href = androidIntentUrl;
+    };
+</script>
 </body>
 </html>
