@@ -58,23 +58,21 @@
 <body>
     <div class="card">
         <h1>Opening FoodieHeal...</h1>
-        <p>Viewing shared meal plan. If the app does not open automatically, tap the button below.</p>
+        <p>If the app does not open automatically, tap the button below.</p>
         <a id="open-btn" href="#" class="btn">Open in App</a>
     </div>
 
     <script>
-        // Grab current search parameters (e.g., ?sourceStart=2026-08-02)
-        const searchString = window.location.search;
-        
-        // Construct the exact App Link URL matching your manifest's host & path
-        const appLinkUrl = "https://tzh652.github.io/share" + searchString;
+        const urlParams = new URLSearchParams(window.location.search);
+        const sourceStart = urlParams.get('sourceStart');
 
-        // Set the anchor tag href so manual taps trigger Android App Links
-        const btn = document.getElementById('open-btn');
-        btn.href = appLinkUrl;
+        // Scheme fallback for manual tap
+        const appSchemeUrl = sourceStart 
+            ? "foodieheal://share?sourceStart=" + encodeURIComponent(sourceStart)
+            : "foodieheal://share";
 
-        // Attempt automatic redirection on load
-        window.location.replace(appLinkUrl);
+        // Set button destination to custom scheme
+        document.getElementById('open-btn').href = appSchemeUrl;
     </script>
 </body>
 </html>
