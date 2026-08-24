@@ -64,14 +64,19 @@
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const templateId = urlParams.get('templateId');
+        
+        // Accept either 'id' or 'templateId'
+        const planId = urlParams.get('id') || urlParams.get('templateId');
 
-        const androidIntentUrl = templateId
-            ? `intent://template?templateId=${encodeURIComponent(templateId)}#Intent;scheme=foodieheal;package=com.example.foodieheal;end`
+        // Construct valid Intent URL
+        const androidIntentUrl = planId
+            ? `intent://template?id=${encodeURIComponent(planId)}#Intent;scheme=foodieheal;package=com.example.foodieheal;end`
             : `intent://template#Intent;scheme=foodieheal;package=com.example.foodieheal;end`;
 
-        document.getElementById('open-btn').href = androidIntentUrl;
+        const openBtn = document.getElementById('open-btn');
+        openBtn.href = androidIntentUrl;
 
+        // Auto-redirect to app on page load
         window.onload = function() {
             window.location.href = androidIntentUrl;
         };
