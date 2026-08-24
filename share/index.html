@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FoodieHeal - Open Meal Plan</title>
+    <title>FoodieHeal - Open Shared Link</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -57,34 +57,47 @@
 </head>
 <body>
     <div class="card">
-        <h1>Opening FoodieHeal...</h1>
-        <p>If the app does not open automatically, tap the button below.</p>
+        <h1 id="heading">Opening FoodieHeal...</h1>
+        <p id="subtext">If the app does not open automatically, tap the button below.</p>
         <a id="open-btn" href="#" class="btn">Open in App</a>
     </div>
 
-   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const sourceStart = urlParams.get('sourceStart');
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const sourceStart = urlParams.get('sourceStart');
+        const templateId = urlParams.get('templateId');
 
-    // 1. Target HTTPS App Link path first
-    const httpsUrl = sourceStart 
-        ? "https://tzh652.github.io/share?sourceStart=" + encodeURIComponent(sourceStart)
-        : "https://tzh652.github.io/share";
+        let targetHost = 'share';
+        let queryParam = '';
 
-    // 2. Android Intent Scheme fallback (Chrome-friendly)
-    const androidIntentUrl = sourceStart
-        ? `intent://share?sourceStart=${encodeURIComponent(sourceStart)}#Intent;scheme=foodieheal;package=com.example.foodieheal;end`
-        : `intent://share#Intent;scheme=foodieheal;package=com.example.foodieheal;end`;
+        // Determine destination based on parameters present in URL
+        if (templateId) {
+            targetHost = 'template';
+            queryParam = `templateId=${encodeURIComponent(templateId)}`;
+            document.getElementById('heading').innerText = "Opening Shared Template...";
+        } else if (sourceStart) {
+            targetHost = 'share';
+            queryParam = `sourceStart=${encodeURIComponent(sourceStart)}`;
+            document.getElementById('heading').innerText = "Opening Shared Meal Plan...";
+        }
 
-    const openBtn = document.getElementById('open-btn');
+        // 1. Target HTTPS App Link path
+        const httpsUrl = queryParam 
+            ? `https://tzh652.github.io/${targetHost}?${queryParam}`
+            : `https://tzh652.github.io/${targetHost}`;
 
-    // Set fallback href on button
-    openBtn.href = androidIntentUrl;
+        // 2. Android Intent Scheme fallback (Chrome-friendly)
+        const androidIntentUrl = queryParam
+            ? `intent://${targetHost}?${queryParam}#Intent;scheme=foodieheal;package=com.example.foodieheal;end`
+            : `intent://${targetHost}#Intent;scheme=foodieheal;package=com.example.foodieheal;end`;
 
-    // Optional: Auto-trigger redirection when landing on page
-    window.onload = function() {
-        window.location.href = androidIntentUrl;
-    };
-</script>
+        const openBtn = document.getElementById('open-btn');
+        openBtn.href = androidIntentUrl;
+
+        // Auto-redirect when landing on page
+        window.onload = function() {
+            window.location.href = androidIntentUrl;
+        };
+    </script>
 </body>
 </html>
