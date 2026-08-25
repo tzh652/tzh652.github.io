@@ -65,10 +65,17 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const sourceStart = urlParams.get('sourceStart');
+        const sharerId = urlParams.get('sharerId');
 
-        const androidIntentUrl = sourceStart
-            ? `intent://share?sourceStart=${encodeURIComponent(sourceStart)}#Intent;scheme=foodieheal;package=com.example.foodieheal;end`
-            : `intent://share#Intent;scheme=foodieheal;package=com.example.foodieheal;end`;
+        // Construct parameters cleanly
+        let queryParams = [];
+        if (sourceStart) queryParams.push(`sourceStart=${encodeURIComponent(sourceStart)}`);
+        if (sharerId) queryParams.push(`sharerId=${encodeURIComponent(sharerId)}`);
+
+        const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
+
+        // Build complete intent scheme
+        const androidIntentUrl = `intent://share${queryString}#Intent;scheme=foodieheal;package=com.example.foodieheal;end`;
 
         document.getElementById('open-btn').href = androidIntentUrl;
 
